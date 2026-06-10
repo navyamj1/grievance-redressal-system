@@ -1,6 +1,7 @@
 package greivance.project.controllers;
 
 import greivance.project.entity.Issue;
+import greivance.project.entity.enums.IssueStatus;
 import greivance.project.entity.User;
 import greivance.project.repos.IssueRepo;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +12,7 @@ import java.util.List;
 @RestController
 public class IssueController {
 
-    //Testing the apu n
+    //Testing the apu need to make changes when docker is set
 
     private final IssueRepo repo;
 
@@ -48,6 +49,7 @@ public class IssueController {
         }
         newIssue.setLatitude(latitude);
         newIssue.setLongitude(longitude);
+        newIssue.setStatus(IssueStatus.ASSIGNED);
 
         issues.add(newIssue);
 

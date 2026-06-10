@@ -1,5 +1,6 @@
 package greivance.project.entity;
 
+import greivance.project.entity.enums.IssueStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,7 +23,6 @@ public class Issue {
     @Column(nullable = false)
     private String description;
 
-    @Column(nullable = true)
     private String imageUrl;
 
     @Column(nullable = false)
@@ -30,6 +30,9 @@ public class Issue {
 
     @Column(nullable = false)
     private Double longitude;
+
+    @Column(nullable = false)
+    private IssueStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
