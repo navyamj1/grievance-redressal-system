@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class IssueServices {
     private final IssueRepo repo;
 
-    public IssueServices(IssueRepo repo){
+    private final UserServices userServices;
+    public IssueServices(IssueRepo repo,UserServices userServices){
         this.repo = repo;
+        this.userServices = userServices;
     }
 
     public Iterable<Issue> GetAllIssues(){
@@ -27,8 +29,7 @@ public class IssueServices {
              Double latitude,
              Double longitude
     ){
-        User newUser = new User();
-        newUser.setName(username);
+        User newUser = userServices.AddUserAndGet(username);
         Issue newIssue = new Issue();
         newIssue.setUser(newUser);
         newIssue.setDescription(description);
