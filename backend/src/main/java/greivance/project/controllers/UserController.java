@@ -28,11 +28,11 @@ public class UserController {
     public @ResponseBody User addUser(
             @RequestParam String username
     ) {
-        return userServices.AddUserAndGet(username);
+        return userServices.postUser(username);
     }
     @GetMapping("/add-user/{id}")
     public ResponseEntity<User> getUserWithId(@PathVariable Long id){
-        return userServices.fetchUserById(id)
+        return userServices.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }

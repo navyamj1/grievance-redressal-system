@@ -5,13 +5,14 @@ import greivance.project.entity.Issue;
 import greivance.project.entity.User;
 import greivance.project.entity.enums.IssueStatus;
 import greivance.project.exceptions.DepartmentNotFoundException;
+import greivance.project.exceptions.IssueNotFoundException;
 import greivance.project.repos.IssueRepo;
 import greivance.project.responses.IssueResponse;
 import org.springframework.stereotype.Service;
 import greivance.project.requests.IssueRequest;
 import greivance.project.exceptions.UserNotFoundException;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class IssueServices {
@@ -26,18 +27,21 @@ public class IssueServices {
         this.departmentServices = departmentServices;
     }
 
-    public Iterable<Issue> getAllIssues(){
-        return repo.findAll();
+    public List<IssueResponse> getAllIssues(){
+        return repo.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     public IssueResponse postIssue(
         IssueRequest request
     ){
         Long userId = request.getUserId();
-        User user =  userServices.fetchUserById(userId)
+        User user =  userServices.getUserById(userId)
                 .orElseThrow(()->new UserNotFoundException(userId));
         Long departmentId = request.getDepartmentId();
-        Department department= departmentServices.fetchDepartmentById(departmentId)
+        Department department= departmentServices.getDepartmentById(departmentId)
                 .orElseThrow(()->new DepartmentNotFoundException(departmentId));
         Issue issue = buildIssue(request,user,department);
 
@@ -45,8 +49,38 @@ public class IssueServices {
 
         return toResponse(savedIssue);
     }
+    public IssueResponse getIssueById(Long id){
+        Issue issue= repo.findById(id).orElseThrow(()-> new IssueNotFoundException(id));
+        return toResponse(issue);
+    }
+    public IssueResponse updateIssue(Long id,IssueRequest request){
+        Issue issue = repo.findById(id).orElseThrow(()->new IssueNotFoundException(id));
+        Long userId = request.getUserId();
+        User user = userServices.getUserById(userId).orElseThrow(()->new UserNotFoundException(userId));
+        Long departmentId = request.getDepartmentId();
+        Department department = departmentServices.getDepartmentById(departmentId)
+                .orElseThrow(()->new DepartmentNotFoundException(departmentId));
+        issue.setTitle(request.getTitle());
+        issue.setDescription(request.getDescription());
+        issue.setLongitude(request.getLongitude());
+        issue.setLatitude(request.getLatitude());
+        issue.setUser(user);
+        issue.setImageUrl(request.getImageUrl());
+        issue.setStatus(request.getStatus());
+        issue.setDepartment(department);
+
+        Issue savedIssue = repo.save(issue);
+        return toResponse(savedIssue);
+    }
+
+    public void deleteIssue(Long id){
+        Issue issue = repo.findById(id).orElseThrow(()->new IssueNotFoundException(id));
+
+        repo.delete(issue);
+    }
+
     private Issue buildIssue(IssueRequest request,User user,Department department){
-        Issue issue = Issue.builder()
+        return Issue.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .latitude(request.getLatitude())
@@ -56,7 +90,6 @@ public class IssueServices {
                 .user(user)
                 .department(department)
                 .build();
-        return issue;
     }
     private String normalizeImageUrl(String imageUrl){
         return (imageUrl==null||imageUrl.isBlank())?null : imageUrl;
@@ -71,7 +104,7 @@ public class IssueServices {
                 .longitude(issue.getLongitude())
                 .status(issue.getStatus())
                 .userId(issue.getUser().getId())
-                .username(issue.getUser().getUsername())
+                .userName(issue.getUser().getUsername())
                 .departmentId(issue.getDepartment().getId())
                 .departmentName(issue.getDepartment().getName())
                 .createdAt(issue.getCreatedAt())

@@ -1,5 +1,6 @@
 package greivance.project.requests;
 
+import greivance.project.entity.enums.IssueStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -15,6 +16,9 @@ public class IssueRequest {
     private Double latitude;
     @NotNull
     private Double longitude;
+
+    @NotNull
+    private IssueStatus status = IssueStatus.OPEN;
 
     private String imageUrl;
     @NotNull

@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
     @ExceptionHandler(DepartmentNotFoundException.class)
-    public ResponseEntity<String> handleDepartmenntNotFOund(DepartmentNotFoundException ex){
+    public ResponseEntity<String> handleDepartmentNotFound(DepartmentNotFoundException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ex.getMessage());
     }
@@ -30,5 +30,10 @@ public class GlobalExceptionHandler {
                 .orElse("Validation failed");
 
         return ResponseEntity.badRequest().body(message);
+    }
+    @ExceptionHandler(IssueNotFoundException.class)
+    public ResponseEntity<String> handleIssueNotFound(IssueNotFoundException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
     }
 }

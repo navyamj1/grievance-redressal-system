@@ -19,7 +19,7 @@ public class UserServices {
         return repo.findAll();
     }
 
-    public User AddUserAndGet(String username) {
+    public User postUser(String username) {
 
         User existingUser = repo.findByUsername(username);
 
@@ -36,7 +36,7 @@ public class UserServices {
 
         return user;
     }
-    public Optional<User> fetchUserById(Long id){
+    public Optional<User> getUserById(Long id){
         return repo.findById(id);
     }
 

@@ -17,12 +17,12 @@ public class DepartmentServices {
     }
 
     // all departments with get
-    public Iterable<Department> GetAllDepartments() {
+    public Iterable<Department> getAllDepartments() {
         return repo.findAll();
     }
 
     // add a new dept
-    public String AddDepartment(String name) {
+    public String postDepartment(String name) {
 
         // if dept already exists 
         Department existingDepartment = repo.findByName(name);
@@ -63,7 +63,7 @@ public class DepartmentServices {
 
         return "Department Added Successfully";
     }
-    public Optional<Department> fetchDepartmentById(Long id){
+    public Optional<Department> getDepartmentById(Long id){
         return repo.findById(id);
     }
 }
