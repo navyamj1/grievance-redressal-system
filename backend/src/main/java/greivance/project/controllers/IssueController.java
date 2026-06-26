@@ -57,9 +57,6 @@ public class IssueController {
             @RequestParam(required = false) Long departmentId,
             @RequestParam(required = false) IssueStatus status
     ){
-        if(userId !=null){
-            return issueServices.getIssuesByUserId(userId);
-        }
         if(departmentId!=null && status != null){
             return issueServices.getIssuesByDepartmentAndStatus(departmentId,status);
         }
@@ -68,6 +65,9 @@ public class IssueController {
         }
         if(departmentId != null){
             return  issueServices.getIssuesByDepartmentId(departmentId);
+        }
+        if(userId !=null){
+            return issueServices.getIssuesByUserId(userId);
         }
 
         return issueServices.getAllIssues();
