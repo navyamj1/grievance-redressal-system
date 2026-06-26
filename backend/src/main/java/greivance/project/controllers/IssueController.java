@@ -1,5 +1,6 @@
 package greivance.project.controllers;
 
+import greivance.project.entity.enums.IssueStatus;
 import greivance.project.responses.IssueResponse;
 import greivance.project.services.IssueServices;
 import jakarta.validation.Valid;
@@ -21,11 +22,6 @@ public class IssueController {
 
     public IssueController(IssueServices service){
         issueServices= service;
-    }
-
-    @GetMapping
-    public List<IssueResponse> getIssues(){
-        return issueServices.getAllIssues();
     }
 
     @PostMapping
@@ -53,6 +49,28 @@ public class IssueController {
     public ResponseEntity<Void> deleteIssue(@PathVariable Long id){
         issueServices.deleteIssue(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public List<IssueResponse> getIssues(
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) Long departmentId,
+            @RequestParam(required = false) IssueStatus status
+    ){
+        if(userId !=null){
+            return issueServices.getIssuesByUserId(userId);
+        }
+        if(departmentId!=null && status != null){
+            return issueServices.getIssuesByDepartmentAndStatus(departmentId,status);
+        }
+        if(status != null){
+            return  issueServices.getIssuesByStatus(status);
+        }
+        if(departmentId != null){
+            return  issueServices.getIssuesByDepartmentId(departmentId);
+        }
+
+        return issueServices.getAllIssues();
     }
 
 }
