@@ -37,12 +37,8 @@ public class IssueServices {
     public IssueResponse postIssue(
         IssueRequest request
     ){
-        Long userId = request.getUserId();
-        User user =  userServices.getUserById(userId)
-                .orElseThrow(()->new UserNotFoundException(userId));
-        Long departmentId = request.getDepartmentId();
-        Department department= departmentServices.getDepartmentById(departmentId)
-                .orElseThrow(()->new DepartmentNotFoundException(departmentId));
+        User user =  findUser(request.getUserId());
+        Department department= findDepartment(request.getDepartmentId());
         Issue issue = buildIssue(request,user,department);
 
         Issue savedIssue = repo.save(issue);
@@ -55,17 +51,14 @@ public class IssueServices {
     }
     public IssueResponse updateIssue(Long id,IssueRequest request){
         Issue issue = repo.findById(id).orElseThrow(()->new IssueNotFoundException(id));
-        Long userId = request.getUserId();
-        User user = userServices.getUserById(userId).orElseThrow(()->new UserNotFoundException(userId));
-        Long departmentId = request.getDepartmentId();
-        Department department = departmentServices.getDepartmentById(departmentId)
-                .orElseThrow(()->new DepartmentNotFoundException(departmentId));
+        User user = findUser(request.getUserId());
+        Department department = findDepartment(request.getDepartmentId());
         issue.setTitle(request.getTitle());
         issue.setDescription(request.getDescription());
         issue.setLongitude(request.getLongitude());
         issue.setLatitude(request.getLatitude());
         issue.setUser(user);
-        issue.setImageUrl(request.getImageUrl());
+        issue.setImageUrl(normalizeImageUrl(request.getImageUrl()));
         issue.setStatus(request.getStatus());
         issue.setDepartment(department);
 
@@ -77,6 +70,38 @@ public class IssueServices {
         Issue issue = repo.findById(id).orElseThrow(()->new IssueNotFoundException(id));
 
         repo.delete(issue);
+    }
+
+    public List<IssueResponse> getIssuesByUserId(Long id){
+        return  repo.findIssueByUserId(id)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+    public List<IssueResponse> getIssuesByDepartmentId(Long id){
+        return repo.findIssueByDepartmentId(id)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+    public List<IssueResponse> getIssuesByStatus(IssueStatus status){
+        return repo.findIssueByStatus(status)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+    public List<IssueResponse> getIssuesByDepartmentAndStatus(Long id,IssueStatus status){
+        return  repo.findIssueByDepartmentIdAndStatus(id,status)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    private User findUser(Long userid) {
+        return userServices.getUserById(userid).orElseThrow(()->new UserNotFoundException(userid));
+    }
+    private Department findDepartment(Long departmentId){
+        return departmentServices.getDepartmentById(departmentId).orElseThrow(()-> new DepartmentNotFoundException(departmentId));
     }
 
     private Issue buildIssue(IssueRequest request,User user,Department department){
