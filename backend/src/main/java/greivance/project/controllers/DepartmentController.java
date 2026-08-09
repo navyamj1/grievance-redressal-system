@@ -20,13 +20,13 @@ public class DepartmentController {
 
     @GetMapping("/departments")
     public @ResponseBody Iterable<Department> getDepartments() {
-        return departmentServices.GetAllDepartments();
+        return departmentServices.getAllDepartments();
     }
 
     @PostMapping("/post-department")
     public @ResponseBody String postDepartment(
             @RequestParam String name
     ) {
-        return departmentServices.AddDepartment(name);
+        return departmentServices.postDepartment(name);
     }
 }

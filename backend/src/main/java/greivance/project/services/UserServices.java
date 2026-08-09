@@ -4,6 +4,7 @@ import greivance.project.entity.User;
 import greivance.project.entity.enums.Role;
 import greivance.project.repos.UserRepo;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
 public class UserServices {
@@ -18,7 +19,7 @@ public class UserServices {
         return repo.findAll();
     }
 
-    public User AddUserAndGet(String username) {
+    public User postUser(String username) {
 
         User existingUser = repo.findByUsername(username);
 
@@ -34,6 +35,9 @@ public class UserServices {
         repo.save(user);
 
         return user;
+    }
+    public Optional<User> getUserById(Long id){
+        return repo.findById(id);
     }
 
 }
