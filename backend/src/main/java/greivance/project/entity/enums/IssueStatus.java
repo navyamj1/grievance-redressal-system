@@ -1,9 +1,18 @@
 package greivance.project.entity.enums;
 
 public enum IssueStatus {
-    OPEN,
-    ASSIGNED,
+    // citizen has filed the issue, no department action yet
+    SUBMITTED,
+    // department has acknowledged the issue
+    RECEIVED,
+    // officer is assessing the issue
+    UNDER_REVIEW,
+    // work has started
     IN_PROGRESS,
+    // work is done, awaiting closure
     RESOLVED,
-    CLOSED
+    // terminal, no further updates
+    CLOSED,
+    // terminal, rejected with reason
+    REJECTED
 }
