@@ -1,0 +1,39 @@
+package greivance.project.services;
+
+import greivance.project.entity.User;
+import greivance.project.entity.enums.Role;
+import greivance.project.repos.UserRepo;
+import org.springframework.stereotype.Service;
+
+@Service
+public class UserServices {
+
+    private final UserRepo repo;
+
+    public UserServices(UserRepo repo) {
+        this.repo = repo;
+    }
+
+    public Iterable<User> GetAllUsers() {
+        return repo.findAll();
+    }
+
+    public User AddUserAndGet(String username) {
+
+        User existingUser = repo.findByUsername(username);
+
+        if (existingUser != null) {
+            return existingUser;
+        }
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword("temp123"); // Temporary password
+        user.setRole(Role.USER);
+
+        repo.save(user);
+
+        return user;
+    }
+
+}

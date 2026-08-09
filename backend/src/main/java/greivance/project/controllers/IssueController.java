@@ -3,6 +3,7 @@ package greivance.project.controllers;
 import greivance.project.entity.Issue;
 import greivance.project.entity.enums.IssueStatus;
 import greivance.project.entity.User;
+import greivance.project.services.IssueServices;
 import greivance.project.repos.IssueRepo;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,17 +15,15 @@ public class IssueController {
 
     //Testing the apu need to make changes when docker is set
 
-    private final IssueRepo repo;
+    private final IssueServices issueServices;
 
-    private List<Issue> issues = new ArrayList<>();
-
-    public IssueController(IssueRepo repo){
-        this.repo = repo;
+    public IssueController(IssueServices service){
+        issueServices= service;
     }
 
     @GetMapping("/issue")
     public @ResponseBody Iterable<Issue> getIssues(){
-        return issues;
+        return issueServices.GetAllIssues();
     }
 
     @PostMapping("/post-issues")
@@ -36,24 +35,7 @@ public class IssueController {
             @RequestParam Double latitude,
             @RequestParam Double longitude
     ){
-        User newUser = new User();
-        newUser.setName(username);
-        Issue newIssue = new Issue();
-        newIssue.setUser(newUser);
-        newIssue.setTitle(title);
-        newIssue.setDescription(description);
-        if(imageUrl.equals("/")){
-            newIssue.setImageUrl(null);
-        }else{
-            newIssue.setImageUrl(imageUrl);
-        }
-        newIssue.setLatitude(latitude);
-        newIssue.setLongitude(longitude);
-        newIssue.setStatus(IssueStatus.ASSIGNED);
-
-        issues.add(newIssue);
-
-        return "Saved";
+        return issueServices.PostIssue(username,title,description,imageUrl,latitude,longitude);
     }
 
 }
