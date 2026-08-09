@@ -18,7 +18,7 @@ public class IssueRequest {
     private Double longitude;
 
     @NotNull
-    private IssueStatus status = IssueStatus.OPEN;
+    private IssueStatus status = IssueStatus.SUBMITTED;
 
     private String imageUrl;
     @NotNull

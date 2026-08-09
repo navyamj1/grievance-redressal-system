@@ -72,5 +72,4 @@ public class IssueController {
 
         return issueServices.getAllIssues();
     }
-
 }

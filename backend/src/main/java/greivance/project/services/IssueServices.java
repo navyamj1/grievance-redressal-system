@@ -111,7 +111,7 @@ public class IssueServices {
                 .latitude(request.getLatitude())
                 .longitude(request.getLongitude())
                 .imageUrl(normalizeImageUrl(request.getImageUrl()))
-                .status(IssueStatus.OPEN)
+                .status(IssueStatus.SUBMITTED)
                 .user(user)
                 .department(department)
                 .build();

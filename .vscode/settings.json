@@ -1,3 +1,6 @@
 {
-  "java.compile.nullAnalysis.mode": "automatic"
+  "java.compile.nullAnalysis.mode": "automatic",
+  // Re-sync the classpath automatically when build.gradle changes. Without this the
+  // language server keeps a stale classpath and silently emits error-stub .class files.
+  "java.configuration.updateBuildConfiguration": "automatic"
 }
